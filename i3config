@@ -1,0 +1,211 @@
+#------------
+#-  System  - 
+#------------
+
+
+# Refresh i3 variable
+set $refresh_i3status killall -SIGUSR1 i3status
+
+# Font for window titles.
+font pango:monospace 8
+
+# xss-lock grabs a logind suspend and uses i3lock to lock the screen before suspend
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+
+# Wallpaper
+exec --no-startup-id feh --bg-scale /storage/Pictures/Wallpapers/japan.jpeg
+
+# Compton
+exec --no-startup-id compton --no-fading-openclose --vsync
+
+# libinput
+exec --no-startup-id libinput-gestures-setup start
+
+# i3expo python script
+exec_always --no-startup-id python /home/matt/i3expo/i3expod.py
+
+# Remove Focus Following Mouse
+focus_follows_mouse no
+
+# Windows automatically spawn in horizontal orientation 
+default_orientation horizontal
+
+# Automatically unblock wlan
+exec --no-startup-id sudo rfkill unblock wlan
+
+
+# ~~~i3 bar~~~
+# Initialization
+set $transparent #2f2f2fD9
+bar {
+    font pango:SF Pro Display, Entypo 10
+	status_command i3blocks
+	i3bar_command i3bar -t
+	position bottom
+	mode dock
+	tray_output no
+	workspace_buttons no
+	colors {
+		background $transparent
+	}
+}
+
+
+# ~~~i3 gaps~~~
+#No Border
+for_window [class="^.*"] border pixel 0
+
+#Intializes the temp file for gap state script
+exec --no-startup-id bash /home/matt/local/bin/gapsInitial
+
+
+#--------------
+#-  Keybinds  -
+#--------------
+# ~~~Current List~~~
+#
+# Mod (Windows Key)
+# + Enter: Open terminal 
+#    + Shift + Enter: Open terminal in vertical mode
+# + q: Close window
+# + w: Open Discord
+# + e: Change gap size (Run /usr/bin/gapsStateCheck) 
+# + Shift + r: Restart i3
+# + a: Open zathura
+# + s: Open Firefox 
+#    + Shift + s: Open Firefox in private mode 
+# + d: Open dmenu
+# + f: Toggle fullscreen on window
+# + z: Open Oni
+# + Tab: Open i3expo
+# + pgup/dn: Move to Next/Prev workspace currently open
+# + (number): Move to workspace (number)
+#    + Shift + (number): Move focused window to workspace (number)
+# + Arrow Keys: Move window focus
+#    + Shift + Arrow Keys: Move focused window in workspace
+#
+# fn 
+# + Brightness keys: Controls brightness in increments of 10%
+# + Volume keys: Controls values in increments of 10%
+# 
+# Prt sc: Take screenshot using Flameshot gui
+
+# ~~~Mod Key~~~
+# Windows Key
+set $mod Mod4
+
+
+# ~~~App Shortcuts~~~
+# Terminal
+bindsym $mod+Return split h;  exec termite
+bindsym $mod+Shift+Return split v; exec termite
+
+# Dmenu
+bindsym $mod+d exec dmenu_run
+
+# Chrome
+bindsym $mod+s exec chromium
+bindsym $mod+Shift+s exec chromium --incognito
+
+# Zathura
+bindsym $mod+a exec zathura
+
+# Oni
+bindsym $mod+z exec oni
+
+# Discord
+bindsym $mod+w exec discord
+
+# Screenshot using flameshot
+bindsym Print exec flameshot gui
+
+
+# ~~~System Shortcuts~~~
+# Brightness
+bindsym XF86MonBrightnessUp exec xbacklight -inc 10
+bindsym XF86MonBrightnessDown exec xbacklight -dec 10
+
+# Volume adjustment in PulseAudio
+
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+# Restart i3 inplace
+bindsym $mod+Shift+r restart
+
+# ~~~Window Settings~~~
+# Kill Windows
+bindsym $mod+q kill
+
+# Window Focus
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Move Focused Window
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Fullscreen focused window
+bindsym $mod+f fullscreen toggle
+
+# i3expo script call
+bindsym $mod+Tab exec killall -s SIGUSR1 i3expo
+
+# Resizing Windows
+bindsym $mod+Ctrl+Left resize shrink width 5 px or 5 ppt
+bindsym $mod+Ctrl+Right resize grow width 5 px or 5 ppt
+bindsym $mod+Ctrl+Down resize shrink height 5 px or 5 ppt
+bindsym $mod+Ctrl+Up resize grow height 5 px or 5 ppt
+
+
+# ~~~Workspace~~~
+# Workspace Names
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# Switch workspaces
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# Move focused window to workspace and to said workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1; workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2; workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3; workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4; workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5; workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6; workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7; workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8; workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9; workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10; workspace number $ws10
+
+# Scroll through workspaces
+bindsym --whole-window $mod+Next workspace prev_on_output
+bindsym --whole-window $mod+Prior workspace next_on_output
+
+
+# ~~~i3 gaps~~~
+# Script to toggle gaps on and off
+bindsym $mod+e exec --no-startup-id bash /home/matt/local/bin/gapsStateCheck
