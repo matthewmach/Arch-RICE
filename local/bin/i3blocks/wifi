@@ -1,0 +1,10 @@
+#!/bin/bash
+
+SSID_NAME=$(iwgetid -r)
+
+if [[ "${SSID_NAME}" != "" ]]; then
+    echo "   ${SSID_NAME}"
+      
+else
+    echo "   down"
+fi

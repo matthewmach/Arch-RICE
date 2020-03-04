@@ -1,0 +1,11 @@
+value=$(</home/matt/.config/i3/gapsState)
+if [ "$value" = "1" ]
+then
+	i3-msg gaps inner all set 0
+	i3-msg gaps outer all set 0
+	echo "0" > /home/matt/.config/i3/gapsState
+else
+	i3-msg gaps inner all set 10
+	i3-msg gaps outer all set 1
+	echo "1" > /home/matt/.config/i3/gapsState
+fi
